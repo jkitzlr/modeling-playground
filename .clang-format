@@ -1,0 +1,10 @@
+BasedOnStyle: LLVM
+
+AccessModifierOffset: -4
+AlwaysBreakTemplateDeclarations: Yes
+# BinPackArguments: false
+BinPackParameters: false
+IndentCaseLabels: true
+IndentWidth: 4
+PointerAlignment: Left
+SortIncludes: CaseSensitive

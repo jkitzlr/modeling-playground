@@ -1,0 +1,9 @@
+clang++ -Wall -std=c++17 -Iinclude/ -I/opt/homebrew/Cellar/boost/1.89.0/include -o ./build/test_currency src/currency.cpp ./tests/test_currency.cpp
+
+clang++ -Wall -std=c++17 -Iinclude/ -I/opt/homebrew/Cellar/boost/1.89.0/include -o ./build/test_adjuster src/scheduling/adjuster.cpp src/buscal.cpp ./tests/test_adjuster.cpp
+
+clang++ -Wall -std=c++17 -Iinclude/ -I/opt/homebrew/Cellar/boost/1.89.0/include -o ./build/test_tenor tests/test_tenor.cpp
+
+clang++ -std=c++17 -Wall -o ./build/period ./tests/period.cpp ./src/scheduling/schedule_period.cpp
+
+clang++ -std=c++17 -Wall -o ./build/test_sch ./tests/test_sch.cpp ./tests/test_utils.cpp ./src/scheduling/adjuster.cpp ./src/scheduling/schedule_period.cpp ./src/scheduling/schedule.cpp ./src/buscal.cpp
