@@ -1,6 +1,7 @@
 #include <memory>
 #include <optional>
 #include <ostream>
+#include <utility>
 #include <vector>
 
 #include "scheduling/adjuster.hpp"
@@ -13,7 +14,7 @@
 Schedule::Schedule(const Date& effective,
                    const Date& termination,
                    std::uint32_t months,
-                   std::shared_ptr<const BusinessCalendar> buscal,
+                   const BusinessCalendar& buscal,
                    const BusdayConvention& busday_conv,
                    bool eom,
                    bool bom,
@@ -63,3 +64,14 @@ std::ostream& operator<<(std::ostream& os, const Schedule& sch) {
     }
     return os;
 }
+
+// Schedule::Schedule(Schedule&& sch) noexcept
+//     : adjuster(std::move(sch.adjuster)) {
+//     roll_conv = sch.roll_conv;
+//     periods = std::move(sch.periods);
+//     tenor = sch.tenor;
+
+//     // null out the old
+//     sch.roll_conv = nullptr;
+//     sch.tenor = nullptr;
+// }

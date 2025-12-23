@@ -8,18 +8,23 @@
 #include "types.hpp"
 
 class SchedulePeriod {
-    Date start;
-    Date end;
-    Date unadj_start;
-    Date unadj_end;
+    Date _start;
+    Date _end;
+    Date _unadj_start;
+    Date _unadj_end;
 
 public:
     SchedulePeriod(const Date& start,
                    const Date& end,
                    const Date& unadj_start,
                    const Date& unadj_end)
-        : start(start), end(end), unadj_start(unadj_start),
-          unadj_end(unadj_end) {}
+        : _start(start), _end(end), _unadj_start(unadj_start),
+          _unadj_end(unadj_end) {}
+
+    const Date& start() const { return _start; }
+    const Date& end() const { return _end; }
+    const Date& unadj_start() const { return _unadj_start; }
+    const Date& unadj_end() const { return _unadj_end; }
 
     /// @brief Get the length of the period in days.
     /// @return Length in days.

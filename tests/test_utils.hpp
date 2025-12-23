@@ -7,4 +7,4 @@
 #include <string>
 #include <vector>
 
-std::shared_ptr<BusinessCalendar> test_cal();
+BusinessCalendar test_cal();

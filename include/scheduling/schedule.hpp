@@ -24,12 +24,24 @@ public:
     Schedule(const Date& effective,
              const Date& termination,
              std::uint32_t months,
-             std::shared_ptr<const BusinessCalendar> buscal,
+             const BusinessCalendar& buscal,
              const BusdayConvention& busday_conv,
              bool eom = false,
              bool bom = false,
              const std::optional<Date>& front_stub = std::nullopt,
              const std::optional<Date>& back_stub = std::nullopt);
+
+    // * implement move semantics
+    // Schedule& operator=(Schedule&& other) noexcept;
+    // Schedule(Schedule&& other) noexcept;
+
+    // * implement iterator protocol
+    std::vector<SchedulePeriod>::const_iterator begin() const {
+        return periods.begin();
+    }
+    std::vector<SchedulePeriod>::const_iterator end() const {
+        return periods.end();
+    }
 
     // * operator overloads
     friend std::ostream& operator<<(std::ostream& os, const Schedule& sch);

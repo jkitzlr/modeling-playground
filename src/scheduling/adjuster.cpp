@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "scheduling/adjuster.hpp"
 
 Date Adjuster::adjust(const Date& dt) const {
@@ -6,3 +8,8 @@ Date Adjuster::adjust(const Date& dt) const {
     }
     return cal->adjust(dt, conv);
 }
+
+// Adjuster::Adjuster(Adjuster&& other) noexcept {
+//     cal = std::move(other.cal);
+//     conv = other.conv;
+// }
