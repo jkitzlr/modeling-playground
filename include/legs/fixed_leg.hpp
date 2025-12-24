@@ -6,15 +6,12 @@
 #include "currency.hpp"
 #include "leg.hpp"
 #include "marketdata/marketdata.hpp"
-#include "periods/fixed_period.hpp"
 
-class FixedLeg : public Leg<FixedPeriod> {
-    Schedule _sch;
-    const Currency _ccy;
-    const std::shared_ptr<BusinessCalendar> _cal;
-    const Daycounter* _dc;
+class FixedLeg : public Leg {
 
 public:
+    class FixedPeriod;
+
     /// @brief Construct the fixed leg from Schedule and other params
     /// @param sch Schedule--note that this is MOVED into FixedLeg
     /// @param ccy The currency of the leg's payments
@@ -56,5 +53,61 @@ public:
     cashflows(const MarketData* marketdata) const override;
 
     // TODO: this needs to be part of the base Leg interface
-    std::vector<Date> pay_dates() const;
+    std::vector<Date> pay_dates() const override;
+
+private:
+    Schedule _sch;
+    const Currency _ccy;
+    const std::shared_ptr<BusinessCalendar> _cal;
+    const Daycounter* _dc;
+    std::vector<FixedPeriod> _periods;
+};
+
+class FixedLeg::FixedPeriod : public Leg::Period {
+    Date _start;
+    Date _end;
+    Date _pay;
+    float _rate;
+
+public:
+    /// @brief Direct constructor of the FixedPeriod
+    /// @param start Accrual start date of the period
+    /// @param end Accrual end date of the period
+    /// @param pay The date the payment for the period is made
+    /// @param rate The fixed rate
+    FixedPeriod(const Date& start, const Date& end, const Date& pay, float rate)
+        : _start(start), _end(end), _pay(pay), _rate(rate) {}
+
+    // TODO: need to take in a busday cal to compute pay delay
+    /// @brief Construct the FixedPeriod from a SchedulePeriod
+    /// @param pd SchedulePeriod
+    /// @param rate The fixed rate for the period
+    /// @param pay_delay Optional pay delay; if 0, uses adjusted end dt
+    /// @param adjusted Whether to set accrual date as adjusted start/end
+    FixedPeriod(const SchedulePeriod& pd,
+                float rate,
+                std::uint8_t pay_delay = 0,
+                bool adjusted = false);
+
+    const Date& start() const override { return _start; }
+
+    /// @brief Get the end date of the period
+    const Date& end() const override { return _end; }
+
+    /// @ brief Get the pay date for the period
+    const Date& pay() const override { return _pay; }
+
+    /// @brief Calculate accrued interest for the period
+    /// @param dt the date through which to calc accrued interest
+    /// @param dc The daycounter to use to calc the year frac
+    /// @return Accrued interest or NaN if invalid date
+    float accrued(const Date& dt, const Daycounter& dc) const override;
+
+    /// @brief Calculate the cashflow payable for the period
+    /// @param dc The daycounter to use to calc the amount
+    /// @param marketdata Optional market data to provide any needed data to
+    /// project cashflow
+    /// @return The cashflow amount
+    float cashflow(const Daycounter& dc,
+                   const MarketData* marketdata = nullptr) const override;
 };

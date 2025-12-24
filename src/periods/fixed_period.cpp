@@ -1,15 +1,15 @@
 #include "boost/date_time/gregorian/gregorian.hpp"
 
 #include "daycounters/daycounter.hpp"
+#include "legs/fixed_leg.hpp"
 #include "marketdata/marketdata.hpp"
-#include "periods/fixed_period.hpp"
 #include "scheduling/schedule_period.hpp"
 #include "types.hpp"
 
-FixedPeriod::FixedPeriod(const SchedulePeriod& pd,
-                         float rate,
-                         std::uint8_t pay_delay,
-                         bool adjusted)
+FixedLeg::FixedPeriod::FixedPeriod(const SchedulePeriod& pd,
+                                   float rate,
+                                   std::uint8_t pay_delay,
+                                   bool adjusted)
     : _rate(rate) {
     if (adjusted) {
         _start = pd.start();
@@ -24,7 +24,8 @@ FixedPeriod::FixedPeriod(const SchedulePeriod& pd,
 }
 
 // TODO: consider returning optional instead; or raising?
-float FixedPeriod::accrued(const Date& dt, const Daycounter& dc) const {
+float FixedLeg::FixedPeriod::accrued(const Date& dt,
+                                     const Daycounter& dc) const {
     if (is_past(dt) || is_after(dt)) {
         return std::nanf("");
     }
@@ -32,6 +33,7 @@ float FixedPeriod::accrued(const Date& dt, const Daycounter& dc) const {
     return _rate * dc.count(_start, dt);
 }
 
-float FixedPeriod::cashflow(const Daycounter& dc, const MarketData* md) const {
+float FixedLeg::FixedPeriod::cashflow(const Daycounter& dc,
+                                      const MarketData* md) const {
     return accrued(_end, dc);
 }

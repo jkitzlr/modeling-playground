@@ -48,19 +48,19 @@ FixedLeg::FixedLeg(const Date& effective,
                rate,
                adjust) {}
 
+std::vector<Date> FixedLeg::pay_dates() const {
+    std::vector<Date> dts;
+    for (const auto& period : _periods) {
+        dts.push_back(period.pay());
+    }
+    return dts;
+}
+
 const std::vector<float>
 FixedLeg::cashflows(const MarketData* marketdata) const {
     std::vector<float> cfs;
     for (const auto& period : _periods) {
-        cfs.push_back(period.cashflow(*_dc, marketdata));
+        cfs.push_back(period.cashflow(daycounter(), marketdata));
     }
     return cfs;
-}
-
-std::vector<Date> FixedLeg::pay_dates() const {
-    std::vector<Date> dts;
-    for (const auto& period : _periods) {
-        dts.push_back(period._pay);
-    }
-    return dts;
 }
